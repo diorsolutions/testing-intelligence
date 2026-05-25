@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql, initDatabase } from '@/lib/db';
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await initDatabase();
     
     const { answers } = await request.json();
-    const testId = parseInt(params.id);
+    const { id } = await params;
+    const testId = parseInt(id);
     
     // Mavjud javoblarni tekshirish
     const existing = await sql`
@@ -35,11 +36,12 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   }
 }
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await initDatabase();
     
-    const testId = parseInt(params.id);
+    const { id } = await params;
+    const testId = parseInt(id);
     
     const result = await sql`
       SELECT answers FROM answers WHERE test_id = ${testId}
