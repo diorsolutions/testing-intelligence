@@ -110,6 +110,24 @@ export default function TestWizard({ questions, onRestart, answers: initialAnswe
     setCurrentQuestion(index);
   };
 
+  // Get visible question indices for mobile (show as many as fit with ellipsis in middle)
+  const getVisibleQuestionIndices = () => {
+    if (questions.length <= 10) return questions.map((_, i) => i);
+    
+    const visibleCount = 5; // Show 5 numbers from start and 5 from end
+    const startIndices = Array.from({ length: visibleCount }, (_, i) => i);
+    const endIndices = Array.from({ length: visibleCount }, (_, i) => questions.length - visibleCount + i);
+    
+    const indices = [...startIndices, ...endIndices];
+    
+    // Include current question if not already visible
+    if (!indices.includes(currentQuestion)) {
+      indices.push(currentQuestion);
+    }
+    
+    return [...new Set(indices)].sort((a, b) => a - b);
+  };
+
   const currentAnswer = answers[currentQuestion];
   const question = questions[currentQuestion];
   const shuffledOptions = shuffleOptions(question.options, currentQuestion);
@@ -125,31 +143,31 @@ export default function TestWizard({ questions, onRestart, answers: initialAnswe
     const percentage = Math.round((correctCount / questions.length) * 100);
 
     return (
-      <div className="max-w-6xl mx-auto p-6">
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
+      <div className="w-full max-w-6xl mx-auto p-3 sm:p-4 md:p-6">
+        <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
-            <h2 className="text-3xl font-bold text-center">Test Natijalari</h2>
-            <div className="flex items-center justify-center gap-4">
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 sm:p-6 text-white">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center">Test Natijalari</h2>
+            <div className="flex items-center justify-center gap-2 sm:gap-4 mt-4">
               <div className="text-center">
-                <div className="text-6xl font-bold">{correctCount}</div>
-                <div className="text-sm opacity-80">To'g'ri</div>
+                <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">{correctCount}</div>
+                <div className="text-xs sm:text-sm opacity-80">To'g'ri</div>
               </div>
-              <div className="text-4xl font-light opacity-50">/</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl font-light opacity-50">/</div>
               <div className="text-center">
-                <div className="text-6xl font-bold">{questions.length}</div>
-                <div className="text-sm opacity-80">Jami</div>
+                <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold">{questions.length}</div>
+                <div className="text-xs sm:text-sm opacity-80">Jami</div>
               </div>
-              <div className="w-px h-16 bg-white/30 mx-4" />
+              <div className="hidden sm:block w-px h-12 sm:h-16 bg-white/30 mx-2 sm:mx-4" />
               <div className="text-center">
-                <div className="text-5xl font-bold">{percentage}%</div>
-                <div className="text-sm opacity-80">Natija</div>
+                <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">{percentage}%</div>
+                <div className="text-xs sm:text-sm opacity-80">Natija</div>
               </div>
             </div>
           </div>
 
           {/* Results */}
-          <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+          <div className="p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4 max-h-[60vh] sm:max-h-[70vh] overflow-y-auto">
             {questions.map((q, index) => {
               const userAnswer = answers[index];
               const originalCorrectAnswer = correctAnswers[index];
@@ -160,23 +178,23 @@ export default function TestWizard({ questions, onRestart, answers: initialAnswe
               return (
                 <div
                   key={index}
-                  className={`p-5 rounded-2xl border-2 transition-all ${
+                  className={`p-3 sm:p-4 md:p-5 rounded-xl sm:rounded-2xl border-2 transition-all ${
                     isCorrect 
                       ? 'bg-green-50 border-green-300' 
                       : 'bg-red-50 border-red-300'
                   }`}
                 >
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0 ${
+                  <div className="flex items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm flex-shrink-0 ${
                       isCorrect ? 'bg-green-500' : 'bg-red-500'
                     }`}>
                       {index + 1}
                     </div>
-                    <p className="font-semibold text-gray-800 text-base leading-relaxed">
+                    <p className="font-semibold text-gray-800 text-sm sm:text-base leading-relaxed">
                       {q.text}
                     </p>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 ml-11">
+                  <div className="grid grid-cols-1 gap-2 sm:gap-3 ml-8 sm:ml-11">
                     {Object.entries(displayOptions).map(([key, value]) => {
                       const isUserAnswer = userAnswer === key;
                       const isCorrectAnswer = shuffledCorrectAnswer === key;
@@ -184,7 +202,7 @@ export default function TestWizard({ questions, onRestart, answers: initialAnswe
                       return (
                         <div
                           key={key}
-                          className={`p-3 rounded-lg border-2 transition-all ${
+                          className={`p-2 sm:p-3 rounded-lg border-2 transition-all ${
                             isCorrectAnswer
                               ? 'bg-green-100 border-green-500'
                               : isUserAnswer
@@ -192,19 +210,19 @@ export default function TestWizard({ questions, onRestart, answers: initialAnswe
                               : 'bg-white border-gray-200'
                           }`}
                         >
-                          <div className="flex items-start gap-2">
-                            <span className={`font-bold text-sm flex-shrink-0 ${
+                          <div className="flex items-start gap-1 sm:gap-2">
+                            <span className={`font-bold text-xs sm:text-sm flex-shrink-0 ${
                               isCorrectAnswer ? 'text-green-700' : isUserAnswer ? 'text-red-700' : 'text-gray-700'
                             }`}>
                               {key}.
                             </span>
-                            <span className={`text-sm leading-relaxed ${
+                            <span className={`text-xs sm:text-sm leading-relaxed ${
                               isCorrectAnswer ? 'text-green-800' : isUserAnswer ? 'text-red-800' : 'text-gray-700'
                             }`}>
                               {value}
                             </span>
                             {isCorrectAnswer && (
-                              <span className="ml-auto text-green-600 text-lg">✓</span>
+                              <span className="ml-auto text-green-600 text-base sm:text-lg">✓</span>
                             )}
                           </div>
                         </div>
@@ -217,10 +235,10 @@ export default function TestWizard({ questions, onRestart, answers: initialAnswe
           </div>
 
           {/* Footer */}
-          <div className="p-6 bg-gray-50 border-t">
+          <div className="p-3 sm:p-4 md:p-6 bg-gray-50 border-t">
             <button
               onClick={onRestart}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all font-bold text-base shadow-lg"
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all font-bold text-sm sm:text-base shadow-lg"
             >
               Guruhlarga Qaytish
             </button>
@@ -231,23 +249,57 @@ export default function TestWizard({ questions, onRestart, answers: initialAnswe
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-8">
-      <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
+    <div className="w-full max-w-7xl mx-auto p-2 sm:p-4 md:p-6 lg:p-8">
+      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden">
         {/* Progress bar */}
-        <div className="h-4 bg-gray-100">
+        <div className="h-2 sm:h-3 md:h-4 bg-gray-100">
           <div
             className="h-full bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
 
-        <div className="flex">
+        <div className="flex flex-col md:flex-row">
           {/* Question navigation sidebar */}
-          <div className="w-32 bg-gradient-to-b from-gray-50 to-blue-50 p-4 border-r">
-            <div className="mb-4">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Savollar</p>
+          <div className="w-full md:w-32 bg-gradient-to-b from-gray-50 to-blue-50 p-2 sm:p-3 md:p-4 border-b md:border-b-0 md:border-r">
+            <div className="mb-2 sm:mb-4">
+              <p className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 sm:mb-2">Savollar</p>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            {/* Mobile: single row with ellipsis, Desktop: grid */}
+            <div className="flex md:hidden items-center gap-1 sm:gap-2 overflow-x-auto">
+              {getVisibleQuestionIndices().map((index, i, arr) => {
+                const userAnswer = answers[index];
+                const originalCorrectAnswer = correctAnswers[index];
+                const shuffledCorrectAnswer = getShuffledCorrectAnswer(originalCorrectAnswer, questions[index].options, index);
+                const isAnswered = !!userAnswer;
+                const isCorrect = userAnswer === shuffledCorrectAnswer;
+                const showEllipsis = i > 0 && arr[i] - arr[i - 1] > 1;
+
+                return (
+                  <div key={index} className="flex items-center flex-shrink-0">
+                    {showEllipsis && (
+                      <span className="text-gray-400 font-bold px-1">...</span>
+                    )}
+                    <button
+                      onClick={() => handleQuestionSelect(index)}
+                      className={`p-2 sm:p-3 text-xs sm:text-sm font-bold rounded-lg sm:rounded-xl transition-all duration-200 ${
+                        currentQuestion === index
+                          ? 'bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-xl scale-105'
+                          : isAnswered
+                          ? isCorrect
+                            ? 'bg-green-100 text-green-800 border-2 border-green-400 hover:border-green-500'
+                            : 'bg-red-100 text-red-800 border-2 border-red-400 hover:border-red-500'
+                          : 'bg-white border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50'
+                      }`}
+                    >
+                      {index + 1}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+            {/* Desktop grid */}
+            <div className="hidden md:grid grid-cols-2 gap-3">
               {questions.map((_, index) => {
                 const userAnswer = answers[index];
                 const originalCorrectAnswer = correctAnswers[index];
@@ -277,55 +329,55 @@ export default function TestWizard({ questions, onRestart, answers: initialAnswe
           </div>
 
           {/* Main question area */}
-          <div className="flex-1 p-12">
-            <div className="mb-10">
-              <div className="flex items-center gap-4 mb-6">
-                <span className="text-sm font-bold text-gray-500 bg-gradient-to-r from-blue-100 to-purple-100 px-4 py-2 rounded-full uppercase tracking-wide">
+          <div className="flex-1 p-3 sm:p-6 md:p-8 lg:p-12">
+            <div className="mb-6 sm:mb-8 md:mb-10">
+              <div className="flex items-center gap-2 sm:gap-4 mb-3 sm:mb-6">
+                <span className="text-[10px] sm:text-xs md:text-sm font-bold text-gray-500 bg-gradient-to-r from-blue-100 to-purple-100 px-2 sm:px-3 md:px-4 py-1 sm:py-2 rounded-full uppercase tracking-wide">
                   Savol {currentQuestion + 1} / {questions.length}
                 </span>
                 <div className="flex-1 h-px bg-gradient-to-r from-blue-200 to-transparent" />
               </div>
-              <h2 className="text-3xl font-bold text-gray-800 leading-relaxed">
+              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 leading-relaxed">
                 {question.text}
               </h2>
             </div>
 
-            <div className="space-y-5">
+            <div className="space-y-2 sm:space-y-3">
               {Object.entries(shuffledOptions).map(([key, value]) => (
                 <button
                   key={key}
                   onClick={() => handleAnswer(key)}
-                  className={`w-full p-6 text-left rounded-2xl border-2 transition-all duration-200 font-medium text-lg ${
+                  className={`w-full p-2 sm:p-3 md:p-4 lg:p-6 text-left rounded-xl sm:rounded-2xl border-2 transition-all duration-200 font-medium text-sm sm:text-base md:text-lg ${
                     currentAnswer === key
                       ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-purple-50 shadow-xl scale-[1.02]'
                       : 'border-gray-200 hover:border-blue-400 hover:bg-blue-50 hover:shadow-lg'
                   }`}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${
+                  <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                    <div className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm md:text-lg ${
                       currentAnswer === key
                         ? 'bg-gradient-to-br from-blue-600 to-purple-600 text-white'
                         : 'bg-gray-100 text-gray-600'
                     }`}>
                       {key}
                     </div>
-                    <span className="text-gray-700">{value}</span>
+                    <span className="text-gray-700 text-xs sm:text-sm md:text-base">{value}</span>
                   </div>
                 </button>
               ))}
             </div>
 
-            <div className="flex justify-between mt-12 gap-4">
+            <div className="flex justify-between mt-6 sm:mt-8 md:mt-12 gap-2 sm:gap-4">
               <button
                 onClick={handlePrevious}
                 disabled={currentQuestion === 0}
-                className="flex-1 px-8 py-4 rounded-2xl border-2 border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg transition-all"
+                className="flex-1 px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3 md:py-4 rounded-lg sm:rounded-xl md:rounded-2xl border-2 border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-xs sm:text-sm md:text-lg transition-all"
               >
                 ← Orqaga
               </button>
               <button
                 onClick={handleNext}
-                className="flex-1 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 font-bold text-lg shadow-xl hover:shadow-2xl transition-all"
+                className="flex-1 px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3 md:py-4 rounded-lg sm:rounded-xl md:rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 font-bold text-xs sm:text-sm md:text-lg shadow-xl hover:shadow-2xl transition-all"
               >
                 {currentQuestion === questions.length - 1 ? 'Natijalar →' : 'Keyingi →'}
               </button>
