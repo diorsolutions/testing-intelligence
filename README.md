@@ -1,37 +1,36 @@
-# 🎯 DOCX Test Yaratuvchisi
+# DOCX Test Wizard
 
-> **DOCX** fayllaridan savollarni avtomatik o'qib, ularni dinamik va chiroyli **Test Wizard** ko'rinishida taqdim etuvchi zamonaviy veb-ilovasi.
-
----
-
-### 🚀 Asosiy Xususiyatlar
-
-- 📁 **DOCX fayllarni yuklash** – Savollarni tezkor parsing qilish.
-- 📊 **Avtomatik jadval o'quvchi** – Strukturani buzmasdan ma'lumotlarni import qilish.
-- 🧙‍♂️ **Test Wizard interfeysi** – Foydalanuvchi uchun qulay qadam-baqadam boshqaruv.
-- 🎯 **Natijalarni hisoblash** – Javoblarni real-vaqtda tekshirish va tahlil.
-- ⚡ **Tayyor Deploy** – Vercel platformasiga bir marta bosish orqali joylash.
+A modern Next.js 15 application designed to parse structured assessment questions from Microsoft Word (.docx) documents and present them through an interactive, multi-step testing interface.
 
 ---
 
-### 🛠️ Texnologiyalar
+## Features
 
-| Texnologiya | Vazifasi |
+- **Automated Document Parsing** – Direct extraction of tabular questionnaire data using Mammoth.js, eliminating manual data entry.
+- **Dynamic Wizard Interface** – Step-by-step evaluation workflow optimized for user engagement and response retention.
+- **Relational Data Persistence** – Real-time tracking and analytics powered by Neon Postgres with localized session handling.
+- **Production-Ready Deployment** – Seamless integration with Vercel environments using optimized build pipelines.
+
+---
+
+## Technical Stack
+
+| Framework / Library | Role in Architecture |
 | :--- | :--- |
-| **Next.js 15 (App Router)** | Framework & Server-side rendering |
-| **TypeScript** | Tizim xavfsizligi va qat'iy tiplash |
-| **Tailwind CSS** | Zamonaviy va moslashuvchan UI dizayn |
-| **Mammoth.js** | Word (`.docx`) fayllarini xatosiz parslash |
-| **Neon Postgres** | Bulutli va tezkor ma'lumotlar bazasi |
+| **Next.js 15 (App Router)** | Core architecture, server component optimization, and API routing. |
+| **TypeScript** | Strict type-safety across data parsing models and UI states. |
+| **Tailwind CSS** | Declarative utility-first styling for modular UI components. |
+| **Mammoth.js** | Low-level HTML conversion for structured Word processing. |
+| **Neon Postgres** | Serverless PostgreSQL database layer with connection pooling. |
 
 ---
 
-### 💻 Loyihani Boshlash
+## Installation and Setup
 
-#### 1️⃣ Ma'lumotlar bazasini sozlash
-1. [Neon.tech](https://neon.tech) saytida ro'yxatdan o'ting va yangi loyiha yarating.
-2. Berilgan **Connection String** nusxasini oling.
-3. Loyiha ildiz katalogida `.env.local` faylini ochib, quyidagicha sozlang:
+### 1. Database Provisioning
+1. Authenticate into your dashboard at [Neon.tech](https://neon.tech) and initialize a new PostgreSQL project.
+2. Extract the connection string from the database dashboard.
+3. Generate a `.env.local` file in the root directory of your project and append the environment variable:
 
 ```env
 DATABASE_URL="postgresql://user:password@ep-xxx.region.aws.neon.tech/neondb?sslmode=require"
